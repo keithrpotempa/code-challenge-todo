@@ -1,8 +1,8 @@
-const baseUrl = "https://jsonplaceholder.typicode.com";
+const baseUrl = "http://worldtimeapi.org/api/timezone";
 
 const ApiManager = {
-  getAllTodos() {
-    return fetch(`${baseUrl}/todos/`)
+  getTimezones(region) {
+    return fetch(`${baseUrl}/${region}/`)
   }
 };
 

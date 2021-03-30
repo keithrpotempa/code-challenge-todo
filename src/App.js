@@ -9,7 +9,7 @@ import ApiManager from "./modules/api-manager";
 import ItemList from "./components/item-list";
 
 const App = () => {
-  const [todos, setTodos] = useState([]);
+  const [timezones, setTimezones] = useState({});
   const [hasError, setHasError] = useState(false);
   const [errorText, setErrorText] = useState("");
 
@@ -19,33 +19,46 @@ const App = () => {
     setErrorText(message);
   }
 
-  const fetchTodos = () => {
-    return ApiManager.getAllTodos()
-    .then(response => {
-      console.log(response);
-      if (response.ok) {
-        return response.json();
-      } else {
-        handleError(response);
+  const fetchTimezones = (region) => {
+    return ApiManager.getTimezones(region)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          handleError(response);
+        }
+      }).catch(() => {
+        setHasError(true);
+        setErrorText("Failed to fetch");
+      })
+  }
+
+  const getTimezone = region => {
+    return fetchTimezones(region)
+      .then(response => {
+        if(response) {
+          const formattedTimezones = response.map(timezone => timezone.split("/")[1]);
+          setTimezones(prevState => ({
+            ...prevState, 
+            [region]: formattedTimezones
+          }))
+          return response;
+        }
       }
-    }).catch(() => {
-      setHasError(true);
-      setErrorText("Failed to fetch");
+    );
+  }
+
+  // TODO: utilize promise.all
+  const getAllTimezones = () => {
+    const regions = ["Europe", "Asia"];
+    regions.forEach(region => {
+      getTimezone(region);
     });
   }
 
-  const getTodos = () => {
-    fetchTodos()
-      .then(response => {
-        if(response) {
-          setTodos(response)
-        }
-      })
-  };
-
   return (
     <div className="App">
-      <h1>TODO List Code Challenge</h1>
+      <h1>Timezones Code Challenge</h1>
       <Grid 
         container
         direction="column"
@@ -53,13 +66,15 @@ const App = () => {
         justify="center"
         spacing={2}
       >
-        {todos.length > 0 
-          ? <ItemList items={todos} />
+        {Object.keys(timezones).length > 0 
+          ? Object.keys(timezones).map((region, index) => (
+            <ItemList key={index} items={timezones[region]} region={region} />
+          ))
           : (
             <Button 
-            variant="contained" 
-            color="primary"
-            onClick={getTodos}
+              variant="contained" 
+              color="primary"
+              onClick={getAllTimezones}
             >
               Get List
             </Button>

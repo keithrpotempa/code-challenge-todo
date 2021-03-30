@@ -21,20 +21,8 @@ const ItemRow = ({item}) => {
 		<TableRow>
 			<TableCell>
 				<Typography className={classes.title}>
-					{item.userId}
+					{item}
 				</Typography>
-			</TableCell>
-			<TableCell>
-				<Typography>
-                    {item.title}
-				</Typography>
-			</TableCell>
-			<TableCell>
-				{/* If card is selected, show the remove button */}
-                <Checkbox 
-                    checked={item.completed}
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
 			</TableCell>
 		</TableRow>
 	)

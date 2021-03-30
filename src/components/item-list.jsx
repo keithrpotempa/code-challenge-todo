@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const ItemList = ({ items }) => {
+const ItemList = ({ items, region }) => {
   const styles = useStyles();
 
   return (
@@ -31,19 +31,13 @@ const ItemList = ({ items }) => {
         <TableHead>
           <TableRow>
             <TableCell className={styles.header}>
-              User
-            </TableCell>
-            <TableCell className={styles.header}>
-              Title
-            </TableCell>
-            <TableCell className={styles.header}>
-              Completed
+              {region} Timezones
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {items.map(item => (
-            <ItemRow item={item} key={item.id}/>
+            <ItemRow key={item.id} item={item}/>
           ))}
         </TableBody>
       </Table>
